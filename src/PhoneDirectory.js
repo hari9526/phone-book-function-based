@@ -21,21 +21,9 @@ export default function PhoneDirectory() {
 
 
     function deleteSubscriberHandler(subscriberId) {
-
-
-        console.log("deleteSubscriberHandler called for Subscriber ID" + subscriberId)
-        let subscriberIndex = 0;
-        subscribersList.forEach(function (subscriber, index) {
-            if (subscriber.id === subscriberId) {
-                subscriberIndex = index;
-            }
-        });
-
-        console.log("Index to be deleted " + subscriberIndex)
-        let newSubscribers = subscribersList;
-        newSubscribers.splice(subscriberIndex, 1);
-        console.log("newSubscribers", newSubscribers)
-        setSubscribersList(newSubscribers)
+        debugger; 
+        let newSubscribers = subscribersList.filter((sub) => sub.id !== subscriberId);        
+        setSubscribersList(newSubscribers); 
     }
 
     function addSubscriberHandler(newSubscriber) {
