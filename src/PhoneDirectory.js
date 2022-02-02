@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState, useEffect } from 'react';
+import React, { Component, Fragment, useState, useEffect, useCallback, useMemo } from 'react';
 import AddSubscriber from './AddSubscriber';
 import ShowSubscribers from './ShowSubscribers';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -27,16 +27,22 @@ export default function PhoneDirectory() {
         setSubscribersList(data);
     }
 
-    async function deleteSubscriberHandler(subscriberId) {
-        // fetch(`http://localhost:7081/api/contacts/${subscriberId}`, { method: 'DELETE' })
-        //     .then(res => res.json())
-        //     .then(data => loadData());
-
-
+    const deleteSubscriberHandler = useCallback(async (subscriberId) => {
         const rawResponse = await fetch(`http://localhost:7081/api/contacts/${subscriberId}`, { method: 'DELETE' });
         const data = await rawResponse.json();
         loadData();
-    }
+    }); 
+
+    // async function deleteSubscriberHandler(subscriberId) {
+    //     // fetch(`http://localhost:7081/api/contacts/${subscriberId}`, { method: 'DELETE' })
+    //     //     .then(res => res.json())
+    //     //     .then(data => loadData());
+
+
+    //     const rawResponse = await fetch(`http://localhost:7081/api/contacts/${subscriberId}`, { method: 'DELETE' });
+    //     const data = await rawResponse.json();
+    //     loadData();
+    // }
 
     async function addSubscriberHandler(newSubscriber) {
 
@@ -51,7 +57,11 @@ export default function PhoneDirectory() {
         loadData();
 
     }
-
+ 
+    const numberOfSubscribers = useMemo(() => {    
+        return subscribersList.length; 
+    }, [subscribersList]); 
+    
 
     return (
         <Fragment>
@@ -61,7 +71,7 @@ export default function PhoneDirectory() {
                     <Route exact path="/add" render={({ history }, props) => <AddSubscriber history={history} {...props} addSubscriberHandler={(newSubscriber) => addSubscriberHandler(newSubscriber)} />} />
                 </div>
             </Router>
-            <SubscriberCountContext.Provider value={subscribersList.length}>
+            <SubscriberCountContext.Provider value={numberOfSubscribers}>
                 <Footer />
             </SubscriberCountContext.Provider>
 
