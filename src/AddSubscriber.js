@@ -3,6 +3,7 @@ import Header from './Header';
 import './AddSubscriber.css';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export default function AddSusbscriber (props) {
     const [addSubscriberForm, setAddSubscriberForm] = useState({
@@ -40,11 +41,30 @@ export default function AddSusbscriber (props) {
                     <button className="custom-btn">Back</button>
                 </Link>
 
-                <form className="subscriber-form" onSubmit={onFormSubmitted}>
-                    <label htmlFor="name" className="label-control">Name: </label><br />
-                    <input id="name" type="text" className="input-control" name="name" onChange={inputChangedHandler} /><br /><br />
-                    <label htmlFor="phone" className="label-control">Phone: </label><br />
-                    <input id="phone" type="text" className="input-control" name="phone" onChange={inputChangedHandler} /><br /><br />
+                <ValidatorForm className="subscriber-form" onSubmit={onFormSubmitted}>
+
+                    <TextValidator     
+                        id="name"
+                        label="Name: "
+                        type="text" 
+                        name="name"
+                        value={name}
+                        validators={['required']}
+                        onChange = {inputChangedHandler}
+                        errorMessages ={['Name cannot be empty']}
+                    ></TextValidator>
+
+                    <TextValidator
+                        name="phone"
+                        label="Phone: "
+                        id="phone"
+                        type="text" 
+                        value={phone}
+                        validators={['required']}
+                        onChange = {inputChangedHandler}
+                        errorMessages ={['Phone number cannot be empty']}
+                    ></TextValidator>
+                    
 
                     <div className="subscriber-info-container">
                         <span className="subscriber-to-add-heading">Subscriber to be added: </span><br />
@@ -53,7 +73,7 @@ export default function AddSusbscriber (props) {
                     </div>
 
                     <button type="submit" className="custom-btn add-btn">Add</button>
-                </form>
+                </ValidatorForm>
             </div>
         </div>
     )
