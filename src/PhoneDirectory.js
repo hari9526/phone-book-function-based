@@ -1,15 +1,18 @@
-import React, { Component, Fragment, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { Component, Fragment, useState, useEffect, useCallback, useMemo ,useReducer } from 'react';
 import AddSubscriber from './AddSubscriber';
 import ShowSubscribers from './ShowSubscribers';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Footer from './Footer';
 import { SubscriberCountContext } from './SubscriberCountContext';
+import TotalSubscribersReducer from './TotalSubscribersReducer'; 
 
 
 
 export default function PhoneDirectory() {
 
     const [subscribersList, setSubscribersList] = useState([]);
+
+    const [state, dispatch] = useReducer(TotalSubscribersReducer, {count : 0});
 
     useEffect(() => {
         loadData();
@@ -20,16 +23,15 @@ export default function PhoneDirectory() {
         // fetch('http://localhost:7081/api/contacts')
         //     .then(input => input.json())
         //     .then(data => setSubscribersList(data));
-
-
         const rawResponse = await fetch('http://localhost:7081/api/contacts');
         const data = await rawResponse.json();
+        dispatch({"type" : "UPDATE_COUNT", payload : data.length }); 
         setSubscribersList(data);
     }
 
     const deleteSubscriberHandler = useCallback(async (subscriberId) => {
         const rawResponse = await fetch(`http://localhost:7081/api/contacts/${subscriberId}`, { method: 'DELETE' });
-        const data = await rawResponse.json();
+        const data = await rawResponse.json();           
         loadData();
     }); 
 
@@ -58,9 +60,9 @@ export default function PhoneDirectory() {
 
     }
  
-    const numberOfSubscribers = useMemo(() => {    
-        return subscribersList.length; 
-    }, [subscribersList]); 
+    // const numberOfSubscribers = useMemo(() => {    
+    //     return subscribersList.length; 
+    // }, [subscribersList]); 
     
 
     return (
@@ -71,11 +73,9 @@ export default function PhoneDirectory() {
                     <Route exact path="/add" render={({ history }, props) => <AddSubscriber history={history} {...props} addSubscriberHandler={(newSubscriber) => addSubscriberHandler(newSubscriber)} />} />
                 </div>
             </Router>
-            <SubscriberCountContext.Provider value={numberOfSubscribers}>
+            <SubscriberCountContext.Provider value={state.count}>
                 <Footer />
             </SubscriberCountContext.Provider>
-
-
         </Fragment>
 
     )
