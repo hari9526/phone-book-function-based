@@ -1,7 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import AddSubscriber from './AddSubscriber';
 import ShowSubscribers from './ShowSubscribers';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Footer from './Footer';
+import { SubscriberCountContext } from './SubscriberCountContext';
+
+
 
 export default function PhoneDirectory() {
 
@@ -21,9 +25,9 @@ export default function PhoneDirectory() {
 
 
     function deleteSubscriberHandler(subscriberId) {
-        debugger; 
-        let newSubscribers = subscribersList.filter((sub) => sub.id !== subscriberId);        
-        setSubscribersList(newSubscribers); 
+        debugger;
+        let newSubscribers = subscribersList.filter((sub) => sub.id !== subscriberId);
+        setSubscribersList(newSubscribers);
     }
 
     function addSubscriberHandler(newSubscriber) {
@@ -37,13 +41,23 @@ export default function PhoneDirectory() {
         setSubscribersList(subscribersList)
         //this.setState({ subscribersList: subscribersList });
     }
+    
+
     return (
-        <Router>
-            <div>
-                <Route exact path="/" render={(props) => <ShowSubscribers {...props} subscribersList={subscribersList} deleteSubscriberHandler={(subscriberId) => deleteSubscriberHandler(subscriberId)} />} />
-                <Route exact path="/add" render={({ history }, props) => <AddSubscriber history={history} {...props} addSubscriberHandler={(newSubscriber) => addSubscriberHandler(newSubscriber)} />} />
-            </div>
-        </Router>
+        <Fragment>
+            <Router>
+                <div>
+                    <Route exact path="/" render={(props) => <ShowSubscribers {...props} subscribersList={subscribersList} deleteSubscriberHandler={(subscriberId) => deleteSubscriberHandler(subscriberId)} />} />
+                    <Route exact path="/add" render={({ history }, props) => <AddSubscriber history={history} {...props} addSubscriberHandler={(newSubscriber) => addSubscriberHandler(newSubscriber)} />} />
+                </div>
+            </Router>
+            <SubscriberCountContext.Provider value={subscribersList.length}>
+                <Footer />
+            </SubscriberCountContext.Provider>
+
+
+        </Fragment>
+
     )
 }
 //
