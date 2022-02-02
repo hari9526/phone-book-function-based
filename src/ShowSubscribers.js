@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import Header from './Header.js';
 import './ShowSubscribers.css';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function ShowSubscribers(props) {
-
+  //Specify which state you want 
+  const subscribersList = useSelector(state => state.subscribers);
+  
   function onDeletedClick(subscriberId) {
-    debugger; 
     props.deleteSubscriberHandler(subscriberId);
   }
 
@@ -24,7 +26,7 @@ export default function ShowSubscribers(props) {
         </div>
 
         {
-            props.subscribersList.map(sub => {
+            subscribersList.map(sub => {
             return <div key={sub.id} className="grid-container">
               <span className="grid-item">{sub.name}</span>
               <span className="grid-item">{sub.phone}</span>
